@@ -2,14 +2,14 @@
     <head>
         <title>Notatnik</title>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="https://use.fontawesome.com/relase/v5.0.13/css/all.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
         <link href="/public/style.css" rel="stylesheet">
     </head>
 
     <body class="body">
         <div class="wrapper">
             <div class="header">
-                <h1>Moje notatki</h1>
+                <h1><i class="far fa-clipboard"></i>Moje notatki</h1>
             </div>
 
             <div class="container">
