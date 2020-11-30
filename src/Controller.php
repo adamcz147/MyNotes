@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App;
 
 require_once("src/View.php");
+require_once("src/Database.php");
 
 class Controller
 {
@@ -10,16 +11,27 @@ class Controller
 
     private array $request;
     private View $view;
+    private static array $configuration = [];
+
+    public static function initConfiguration(array $configuration): void
+    {
+        self::$configuration = $configuration;
+    }
 
     public function __construct(array $request)
     {
+        $db = new Database(self::$configuration['db']);
+
         $this->request = $request;
         $this->view = new View();
     }
 
+
+
+
+
     public function run(): void
     {
-        
         $viewParams = [];
 
         switch($this->action()){
@@ -67,5 +79,5 @@ class Controller
         $data = $this->getRequestGet();
         return $data['action'] ?? self::DEFAULT_ACTION;
     }
-    
+
 }
