@@ -2,8 +2,11 @@
 declare(strict_types=1);
 namespace App;
 
+require_once("src/Exception/ConfigurationException.php");
+use App\Exception\ConfigurationException;
 require_once("src/View.php");
 require_once("src/Database.php");
+
 
 class Controller
 {
@@ -12,6 +15,7 @@ class Controller
     private array $request;
     private View $view;
     private static array $configuration = [];
+    private Database $database;
 
     public static function initConfiguration(array $configuration): void
     {
@@ -20,14 +24,16 @@ class Controller
 
     public function __construct(array $request)
     {
-        $db = new Database(self::$configuration['db']);
+        if(empty(self::$configuration['db']))
+        {
+            throw new ConfigurationException('Configuration error');
+            
+        }
+        $this->database = new Database(self::$configuration['db']);
 
         $this->request = $request;
         $this->view = new View();
     }
-
-
-
 
 
     public function run(): void
@@ -37,16 +43,15 @@ class Controller
         switch($this->action()){
             case 'create':
                 $page = 'create';
-                $created = false;//flaga mówiąca o tym czy wchodzimy na strone poprez GET czy POST. Notatka nie została jeszcze stworzona.
                 $data = $this->getRequestPost();
                 if(!empty($data)){
-                    $created = true;
-                    $viewParams = [
+                    $noteData = [
                         'title' => $data['title'],
-                        'description' => $data['description']
+                        'description' => $data['descripion']
                     ];
+                    $this->database->createNote($noteData);
+                    header('Location: /?before=created');
                 }
-                $viewParams['created'] = $created;
             break;
             case 'show':
                 $viewParams = [
@@ -57,7 +62,10 @@ class Controller
         
             default:
             $page = 'list';
-            $viewParams['resultList']= "Wyświetlamy notatki";
+
+            $data = $this->getRequestGet();
+
+            $viewParams['before']= $data['before'] ?? null;
             break;
         }
 
