@@ -43,7 +43,6 @@ class Controller
             case 'create':
                 $page = 'create';
                 $data = $this->getRequestPost();
-                dump($data);
                 if(!empty($data)){
                     $noteData = [
                         'title' => $data['title'],
@@ -62,6 +61,11 @@ class Controller
             default:
             $page = 'list';
             $data = $this->getRequestGet();
+            $notes= $this->database->getNotes();
+            dump($notes);
+            
+            
+            
             $viewParams['before']= $data['before'] ?? null;
             break;
         }
