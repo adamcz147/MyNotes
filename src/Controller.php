@@ -27,7 +27,6 @@ class Controller
         if(empty(self::$configuration['db']))
         {
             throw new ConfigurationException('Configuration error');
-            
         }
         $this->database = new Database(self::$configuration['db']);
 
@@ -44,10 +43,11 @@ class Controller
             case 'create':
                 $page = 'create';
                 $data = $this->getRequestPost();
+                dump($data);
                 if(!empty($data)){
                     $noteData = [
                         'title' => $data['title'],
-                        'description' => $data['descripion']
+                        'description' => $data['description']
                     ];
                     $this->database->createNote($noteData);
                     header('Location: /?before=created');
@@ -59,12 +59,9 @@ class Controller
                     'description' => 'Opis'
                 ];
             break;
-        
             default:
             $page = 'list';
-
             $data = $this->getRequestGet();
-
             $viewParams['before']= $data['before'] ?? null;
             break;
         }

@@ -5,6 +5,7 @@ require_once("Exception/StorageException.php");
 use App\Exception\ConfigurationException;
 use App\Exception\StorageException;
 use PDO;
+
 //use Throwable;
 use PDOException;
 
@@ -15,6 +16,7 @@ class Database
     public function __construct(array $config)
     {
         try {
+            dump($config);
             $this->validateConfig($config);
             $this->createConnection($config);
         } catch (PDOException $e) {
@@ -26,21 +28,21 @@ class Database
     {
         try{
             $title = $this->conn->quote($data['title']);
-            $description = $this->conn->quote($data['title']);
-            $created = $this->conn->quote(data('Y-m-d H:i:s'));
+            $description = $this->conn->quote($data['description']);
+            $created = $this->conn->quote(date('Y-m-d H:i:s'));
             $query = "
             INSERT INTO notes(title, description, created)
             VALUES($title, $description, $created)
             ";
             $this->conn->exec($query);
         } catch(Throwable $e){
-            throw new StorageException('Nie udało się utworzyć nowej notatki', 400);
+            throw new StorageException('Nie udało się utworzyć nowej notatki', 400, $e);
         }   
     }
 
     private function createConnection(array $config): void
     {
-         $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
+        $dsn = "mysql:dbname={$config['database']};host={$config['host']}";
             $this->conn = new PDO(
                 $dsn,
                 $config['user'],
