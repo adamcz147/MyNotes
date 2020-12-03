@@ -34,7 +34,7 @@ abstract class AbstractController
     }
   
 
-    public function run(): void
+    final public function run(): void
     {
       $action = $this->action() . 'Action';
       // string action = 'create'; W zmiennej action przechowujemy nazwę metody do wywołania;
@@ -46,7 +46,7 @@ abstract class AbstractController
      $this->$action();//Wywałanie metody create();
     }
   
-    protected function redirect(string $to, array $params): void
+    final protected function redirect(string $to, array $params): void
     {
       $location = $to;
       if(count($params)){
@@ -63,7 +63,7 @@ abstract class AbstractController
       exit;
     }
 
-    private function action(): string
+    final private function action(): string
     { 
       return $this->request->getParam('action', self::DEFAULT_ACTION);
     }
