@@ -36,6 +36,9 @@
         $sort = $params['sort'] ?? [];
         $by = $sort['by'] ?? 'title';
         $order = $sort['order'] ?? 'desc';
+        $page = $params['page'] ?? [];
+        $size = $page['size'] ?? 10;
+        $number = $page['number'] ?? 1;
       ?>
 
 
@@ -50,6 +53,13 @@
             <div>Kierunek sortowania:</div>
             <label>Rosnąco: <input name="sortorder" type="radio" value="asc" <?php echo $order === 'asc' ? 'checked' : '' ?> /></label>
             <label>Malejąco: <input name="sortorder" type="radio" value="desc" <?php echo $order === 'desc' ? 'checked' : '' ?> /></label>
+          </div>
+          <div>
+            <div>Rozmiar paczki</div>
+            <label>1 <input name = "pagesize" type="radio" value="1" <?php echo $size === 1 ? 'checked' : ''?> /></label>
+            <label>5 <input name = "pagesize" type="radio" value="5" <?php echo $size === 1 ? 'checked' : ''?> /></label>
+            <label>10 <input name = "pagesize" type="radio" value="10" <?php echo $size === 1 ? 'checked' : ''?> /></label>
+            <label>25 <input name = "pagesize" type="radio" value="25" <?php echo $size === 1 ? 'checked' : ''?> /></label>
           </div>
           <input type="submit" value="Sortuj"/>
         </form>
