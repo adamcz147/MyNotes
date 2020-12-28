@@ -15,26 +15,21 @@ class View
   private function escape(array $params): array
   {
     $clearParams = [];
-
     foreach ($params as $key => $param) {
-
-      switch(true)
-      {
+      switch (true) {
         case is_array($param):
           $clearParams[$key] = $this->escape($param);
-        break;
+          break;
         case is_int($param):
           $clearParams[$key] = $param;
-        break;
+          break;
         case $param:
           $clearParams[$key] = htmlentities($param);
-        break;
+          break;
         default:
           $clearParams[$key] = $param;
-        break;
-
+          break;
       }
-        
     }
 
     return $clearParams;

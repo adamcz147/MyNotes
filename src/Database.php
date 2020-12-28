@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App;
 
 use App\Exception\ConfigurationException;
@@ -40,16 +42,21 @@ class Database
     return $note;
   }
 
-  public function getNotes(int $pageNumber,int $pageSize, string $sortBy, string $sortOrder): array
-  {
+  public function getNotes(
+    int $pageNumber,
+    int $pageSize,
+    string $sortBy,
+    string $sortOrder
+  ): array {
     try {
       $limit = $pageSize;
       $offset = ($pageNumber - 1) * $pageSize;
 
-      if(!in_array($sortBy, ['created', 'title'])) {
+      if (!in_array($sortBy, ['created', 'title'])) {
         $sortBy = 'title';
       }
-      if(!in_array($sortOrder, ['asc', 'desc'])) {
+
+      if (!in_array($sortOrder, ['asc', 'desc'])) {
         $sortOrder = 'desc';
       }
 
@@ -59,6 +66,7 @@ class Database
         ORDER BY $sortBy $sortOrder
         LIMIT $offset, $limit
       ";
+
       $result = $this->conn->query($query);
       return $result->fetchAll(PDO::FETCH_ASSOC);
     } catch (Throwable $e) {
@@ -66,35 +74,21 @@ class Database
     }
   }
 
-  // public function getCount(): array
-  // {
-  //   try {
-      
-  //     $query = "SELECT count(*) FROM notes";
-  //     $result = $this->conn->query($query);
-  //     return $result->fetchAll(PDO::FETCH_ASSOC);
-  //   } catch (Throwable $e) {
-  //     throw new StorageException('Nie udało się pobrać danych o notatkach', 400, $e);
-  //   }
-  // }
-
-
   public function getCount(): int
   {
     try {
       $query = "SELECT count(*) AS cn FROM notes";
       $result = $this->conn->query($query);
       $result = $result->fetch(PDO::FETCH_ASSOC);
-      if($result === false){
+      if ($result === false) {
         throw new StorageException('Błąd przy próbie pobrania ilości notatek', 400);
       }
+
       return (int) $result['cn'];
     } catch (Throwable $e) {
       throw new StorageException('Nie udało się pobrać informacji o liczbie notatek', 400, $e);
     }
   }
-
-
 
   public function createNote(array $data): void
   {
@@ -116,9 +110,9 @@ class Database
 
   public function editNote(int $id, array $data): void
   {
-    try{
-      $title = $this->conn->quote($data['title']);  
-      $description = $this->conn->quote($data['description']);     
+    try {
+      $title = $this->conn->quote($data['title']);
+      $description = $this->conn->quote($data['description']);
 
       $query = "
         UPDATE notes
@@ -127,22 +121,20 @@ class Database
       ";
 
       $this->conn->exec($query);
-
-    } catch(Throwable $e) {
-      throw new StorageException('Nie udało się zaktualizaowac notatki', 400, $e);
+    } catch (Throwable $e) {
+      throw new StorageException('Nie udało się zaktualizować notetki', 400, $e);
     }
   }
 
   public function deleteNote(int $id): void
   {
     try {
-      $query = "DELETE FROM notes WHERE id=$id LIMIT 1";
+      $query = "DELETE FROM notes WHERE id = $id LIMIT 1";
       $this->conn->exec($query);
     } catch (Throwable $e) {
       throw new StorageException('Nie udało się usunąć notatki', 400, $e);
     }
   }
-
 
   private function createConnection(array $config): void
   {
